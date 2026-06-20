@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #0f172a;
+  --color-surface: #1e293b;
+  --color-surface-highlight: #334155;
+}
+
+body {
+  @apply bg-background text-slate-200 antialiased font-sans;
+}
+
+@utility glass {
+  background-color: rgb(30 41 59 / 0.5);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgb(255 255 255 / 0.1);
+  box-shadow: var(--shadow-xl);
+}
