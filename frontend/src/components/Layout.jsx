@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Sidebar from './Sidebar';
 import Topbar  from './Topbar';
 import { useAuth } from '../context/AuthContext';
@@ -20,6 +20,8 @@ export default function Layout() {
   const navigate = useNavigate();
   const path = window.location.pathname;
   const meta = PAGE_META[path] || { title: 'ERP System', subtitle: '' };
+  
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   useEffect(() => {
     if (!loading && !isAuthenticated) navigate('/login', { replace: true });
@@ -29,10 +31,10 @@ export default function Layout() {
 
   return (
     <div className="app-layout">
-      <Sidebar />
-      <div className="main-content">
-        <Topbar title={meta.title} subtitle={meta.subtitle} />
-        <main className="page-content">
+      <Topbar toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+      <Sidebar isOpen={isSidebarOpen} toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+      <div className="main-content" style={{ marginLeft: isSidebarOpen ? '260px' : '80px', transition: 'margin-left 0.3s ease', paddingTop: 'var(--topbar-height)' }}>
+        <main className="page-content" style={{ marginTop: 0 }}>
           <Outlet />
         </main>
       </div>

@@ -176,4 +176,15 @@ router.patch('/:id/cancel', async (req, res) => {
   }
 });
 
+// PATCH /api/sales/:id/automate — fully automated fulfillment
+const { autoProcessSalesOrder } = require('../services/orchestrator');
+router.patch('/:id/automate', async (req, res) => {
+  try {
+    const result = await autoProcessSalesOrder(req.params.id);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;

@@ -9,7 +9,7 @@ import api from '../api';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../hooks/useToast';
 import Toast from '../components/Toast';
-
+import Badge from '../components/Badge';
 const COLORS = ['#14b8a6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
 
 // Role-specific KPI configs
@@ -139,6 +139,33 @@ export default function DashboardPage() {
             </ResponsiveContainer>
           </motion.div>
         </div>
+      )}
+
+      {/* Recent Sales Orders Widget */}
+      {(data?.recent_sales?.length > 0) && (
+        <motion.div className="table-container" style={{ marginBottom: 24 }} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.38 }}>
+          <div className="table-header">
+            <span className="table-title"><ShoppingCart size={15} style={{ display: 'inline', marginRight: 8, color: 'var(--accent-teal)' }} />
+              Recent 5 Sales Orders
+            </span>
+          </div>
+          <table>
+            <thead>
+              <tr><th>Order #</th><th>Customer</th><th>Date</th><th>Status</th><th>Total Value</th></tr>
+            </thead>
+            <tbody>
+              {data.recent_sales.map((order, i) => (
+                <motion.tr key={order.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.05 }}>
+                  <td style={{ fontWeight: 700, color: 'var(--accent-teal)' }}>SO-{String(order.id).padStart(4, '0')}</td>
+                  <td>{order.customer_name}</td>
+                  <td style={{ color: 'var(--text-muted)' }}>{new Date(order.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                  <td><Badge status={order.status} /></td>
+                  <td style={{ color: 'var(--accent-green)', fontWeight: 600 }}>₹{Number(order.total_value).toLocaleString('en-IN')}</td>
+                </motion.tr>
+              ))}
+            </tbody>
+          </table>
+        </motion.div>
       )}
 
       {/* Low Stock Alert */}

@@ -1,6 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { LayoutDashboard, Package, ShoppingCart, Truck, Factory, BarChart3, LogOut, Layers, Users } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, Truck, Factory, BarChart3, LogOut, Layers, Users, Menu } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const NAV = [
@@ -23,7 +23,7 @@ const ROLE_INFO = {
   INVENTORY:     { label: 'Inv. Manager',     emoji: '📦', color: '#10b981' },
 };
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, toggleSidebar }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const role     = user?.role || 'ADMIN';
@@ -34,55 +34,39 @@ export default function Sidebar() {
 
   return (
     <motion.aside className="sidebar"
-      initial={{ x: -264 }} animate={{ x: 0 }}
-      transition={{ type: 'spring', stiffness: 260, damping: 30 }}>
+      initial={false} animate={{ width: isOpen ? 260 : 80 }}
+      transition={{ type: 'spring', stiffness: 260, damping: 30 }}
+      style={{ overflowX: 'hidden' }}>
 
       {/* Logo */}
-      <div className="sidebar-logo">
-        <div className="logo-icon">🪑</div>
-        <h2>Shiv Furniture Works</h2>
-        <span>Mini ERP System</span>
+      <div className="sidebar-logo" style={{ padding: isOpen ? '24px 20px 12px 20px' : '24px 0 12px 0', display: 'flex', alignItems: 'center', justifyContent: isOpen ? 'flex-start' : 'center', gap: 12 }}>
+        {isOpen ? <h2 style={{ fontSize: 20, color: 'var(--text-primary)', margin: 0, fontWeight: 800, letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}>Master Menu</h2> : <div style={{ fontSize: 20, fontWeight: 800 }}>☰</div>}
       </div>
 
       {/* Role badge */}
-      <div style={{ padding: '10px 16px', borderBottom: '1px solid var(--glass-border)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 12px', borderRadius: 8, background: `${info.color}15`, border: `1px solid ${info.color}30` }}>
+      <div style={{ padding: isOpen ? '10px 16px' : '10px 8px', borderBottom: '1px solid var(--glass-border)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: isOpen ? 'flex-start' : 'center', gap: 8, padding: isOpen ? '8px 12px' : '8px 0', borderRadius: 8, background: `${info.color}15`, border: `1px solid ${info.color}30` }}>
           <span style={{ fontSize: 16 }}>{info.emoji}</span>
-          <div>
-            <div style={{ fontSize: 10, fontWeight: 700, color: info.color, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{info.label}</div>
-            <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{user?.name}</div>
-          </div>
+          {isOpen && (
+            <div style={{ whiteSpace: 'nowrap' }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: info.color, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{info.label}</div>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="sidebar-nav">
-        <div className="nav-section-label">Navigation</div>
+      <nav className="sidebar-nav" style={{ padding: isOpen ? '16px 12px' : '16px 8px' }}>
+        {isOpen && <div className="nav-section-label">Navigation</div>}
         {visible.map(item => (
-          <NavLink key={item.to} to={item.to} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+          <NavLink key={item.to} to={item.to} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} style={{ justifyContent: isOpen ? 'flex-start' : 'center', padding: isOpen ? '10px 12px' : '10px 0' }} title={!isOpen ? item.label : undefined}>
             <span className="nav-icon">{item.icon}</span>
-            {item.label}
+            {isOpen && <span style={{ whiteSpace: 'nowrap' }}>{item.label}</span>}
           </NavLink>
         ))}
       </nav>
 
-      {/* Footer */}
-      <div className="sidebar-footer">
-        <div className="sidebar-user">
-          <div className="user-avatar" style={{ background: `linear-gradient(135deg, ${info.color}, var(--accent-emerald))` }}>
-            {user?.name?.charAt(0)?.toUpperCase() || 'A'}
-          </div>
-          <div className="user-info">
-            <div className="user-name">{user?.name}</div>
-            <div className="user-role" style={{ color: info.color }}>{info.label}</div>
-          </div>
-          <motion.button onClick={handleLogout} title="Logout"
-            style={{ marginLeft: 'auto', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: 6 }}
-            whileHover={{ color: 'var(--accent-red)', scale: 1.1 }}>
-            <LogOut size={15} />
-          </motion.button>
-        </div>
-      </div>
+
     </motion.aside>
   );
 }

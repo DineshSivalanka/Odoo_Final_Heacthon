@@ -153,7 +153,7 @@ export default function SalesPage() {
                         <td>
                           <div style={{ display:'flex', gap:5 }}>
                             {o.status==='DRAFT' && <>
-                              <motion.button className="btn btn-primary btn-xs" whileHover={{ scale:1.05 }} onClick={()=>handleAction(o.id,'confirm','✅ Confirmed!')}><CheckCircle2 size={12}/> Confirm</motion.button>
+                              <motion.button className="btn btn-primary btn-xs" whileHover={{ scale:1.05 }} onClick={()=>handleAction(o.id,'automate','✨ Auto-Fulfilled & Delivered!')}><CheckCircle2 size={12}/> Auto-Fulfill</motion.button>
                               <motion.button className="btn btn-ghost btn-xs" whileHover={{ scale:1.05 }} onClick={()=>handleAction(o.id,'cancel','Cancelled')} style={{ color:'var(--accent-red)' }}><XCircle size={12}/></motion.button>
                             </>}
                             {o.status==='CONFIRMED' && <>
